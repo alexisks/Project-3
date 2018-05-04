@@ -1,0 +1,14 @@
+35/Quill/Peter/B-
+253/Maximoff/Wanda/AB-
+1/Romanoff/Natasha/A+
+3323/Parker/Peter/O-
+99/Barnes/Bucky/O+
+3/Rogers/Steve/A-
+915/Stark/Tony/B+
+5/Strange/Steven/AB-
+85/Hill/Maria/A+
+553/Hogan/Happy/A+
+837/Barton/Clint/AB-
+9/Banner/Bruce/O-
+777/Wilson/Sam/A-
+300/Rhodes/James/A+
