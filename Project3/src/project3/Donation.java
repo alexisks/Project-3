@@ -38,4 +38,11 @@ public class Donation
       else //if the dates are not the same
       return false; //returns false
    }
+   
+   public String toString(){//start toString
+      String str = ""; //creates an empty string
+      str += ID + " " + date + " ";
+      
+      return str; //returns string to be printed
+   }//end toString
 } //end Donation class

@@ -25,39 +25,42 @@ public class Database
 /*Purpose: Find all peope with a specific blood type         */
 /*Parameters:                                                */
 /*            : String   -   that include ths bloodtype      */
-/*      Return: Person[] -   array of matches                */
+/*      Return: void -   prints matches                      */
 /*************************************************************/
-   public Person[] searchBloodType(String bloodType) 
+   public void searchBloodType(String bloodType) 
    {//search
       int count = 0; //created counter
-      
-      Person current = personList.getFirst(); //found the head of the linked list
-      while(current != null) 
-      {
-         
-//         Person temp = (Person) current.getDatum(); //gets the current's datu
-//         String personBlood = temp.getBloodType(); //get bloodtyp from the datum
-//         if (personBlood.equals(bloodType)) 
-//         {count++; } //counts the amount of people who have the same bloodtype
-//         current = current.getNext(); //gets the next node
+      for(Person current: personList){
+         if (current.getBloodType().equals(bloodType))//if bloodtypes match 
+         System.out.println(current); //prints matches
       }
-      Person[] bloodMatches = new Person[count]; //array created for the matching bloodtypes
-      count = 0; //counter back at 0
-      current =  personList.getFirst(); //current is now back at the top of the list
-      while(current != null) //while we're not at the end of the list
-      {
- //        Person temp = (Person) current.getDatum(); //get the datum from the current node
- //        String personBlood = temp.getBloodType(); //gets the bloodtype from the datum
-//         if (personBlood.equals(bloodType)) //checks to see if the bloodtypes are equal
-         {
-//            bloodMatches[count] = temp; //adds the match to the array
-            count++; //adds to counter
-         } 
- //        current = current.getNext(); //goes to the next node in the list
-      }
-     
-      return bloodMatches; //returns the array of donors who match bloodtypes
-   }//search
+   }
+//     // while(current != null) 
+//     // {
+//         
+////         Person temp = (Person) current.getDatum(); //gets the current's datu
+////         String personBlood = temp.getBloodType(); //get bloodtyp from the datum
+////         if (personBlood.equals(bloodType)) 
+////         {count++; } //counts the amount of people who have the same bloodtype
+////         current = current.getNext(); //gets the next node
+//  //    }
+//      Person[] bloodMatches = new Person[count]; //array created for the matching bloodtypes
+//      count = 0; //counter back at 0
+//      current =  personList.getFirst(); //current is now back at the top of the list
+//      while(current != null) //while we're not at the end of the list
+//      {
+// //        Person temp = (Person) current.getDatum(); //get the datum from the current node
+// //        String personBlood = temp.getBloodType(); //gets the bloodtype from the datum
+////         if (personBlood.equals(bloodType)) //checks to see if the bloodtypes are equal
+//         {
+////            bloodMatches[count] = temp; //adds the match to the array
+//            count++; //adds to counter
+//         } 
+// //        current = current.getNext(); //goes to the next node in the list
+//      }
+//     
+//      return bloodMatches; //returns the array of donors who match bloodtypes
+//   }//search
 
    
 
@@ -65,30 +68,25 @@ public class Database
 /*Method: searchID                                                */
 /*Purpose: Find all instances of the ID in the donation txt file  */
 /*Parameters:                                                     */
-/*            : String                                            */
-/*      Return: Node                                              */
+/*            : String   -will be user's ID search                */
+/*      Return: int      -will contain the index of match        */
+/*                       -returns -100 if no match found          */                      
 /******************************************************************/
   
-   public Node searchID(String ID)
-   {  
- //     Node current = (Node) personList.getFirst(); 
-       
-//      while(current != null)
-//      {
-//         Person IdMatches = (Person) current.getDatum();
-//         if(IdMatches.getPersonID().equals(ID))
-//         return current; 
-//         
-//         else 
-//         {
-//            current = current.getNext(); 
-//         } 
-      
-//      }
-//      System.out.print("No user with this ID\n"); 
-//      throw new NullPointerException(); 
-      return null;
-    }   
+    public int searchID(String ID){    
+       int index = personList.indexOf(personList.getLast()); //defaults index to end
+        for(Person current: personList){ //goes through person list
+            if(current.getPersonID().equals(ID)){ //if the IDs match
+                index = personList.indexOf(current); //gets index of match
+                System.out.print(current); //prints tbe person
+                return index; //returns the index of match
+            }
+                 
+        }
+        System.out.print("No user with this ID\n"); //lets user know no user found
+        return -100;  //for use in printDonation() to avoid errors
+
+    }//end searchID   
    /*************************************************************/
 /*Method: insertDonor()                                         */
 /*Purpose: adds a donor to the linked list in sorted order      */
@@ -144,17 +142,13 @@ public class Database
                
                for(Donation currentDonation: current.getDonationList()){
                    int index = current.getDonationList().indexOf(current.getDonationList().getLast()); 
-                   if(splice.getDate().compareTo(currentDonation.getDate()) < 0){
-                       index = current.getDonationList().indexOf(current.getDonationList()); //gets the index
+                   if(splice.getDate().compareTo(currentDonation.getDate()) > 0){
+                       index = current.getDonationList().indexOf(currentDonation); //gets the index
                        current.getDonationList().add(index, splice); //adds at index
                        System.out.print(current.getDonationList());
                        return; 
                    }
-                   else{
-                       current.getDonationList().addLast(splice); 
-                       System.out.print(current.getDonationList());
-                       return; 
-                   }    
+                     
                }//end for loop
                    
            }
@@ -170,79 +164,48 @@ public class Database
 /*************************************************************/
    public void print() {
        for(Person current: personList){
-           System.out.println(current.toString());//goes through the list and prints the Person object
+           System.out.print(current.toString());//goes through the list and prints the Person object
+               if(current.getDonationList().isEmpty() == false){ //if list is not empty
+               Donation test = current.getDonationList().getFirst(); //get first in list
+               System.out.println("Last donation date: " + test.getDate()); //prints last donation date
+               if(test.getDate() != LocalDate.MIN) //checks for valid date
+               {//start if
+                  if(current.eligible(test)) //if eligible to donate
+                  System.out.println("Eligible: yes."); //prints yes
+                  else //if not eligible to donate
+                  System.out.println("Eligible: no.");//prints no
+                  System.out.println(""); //prints a space
+               }
+               else //error check
+                  System.out.println("Never donated before.\n"); //prints never donated
+            }// end if
+            else//if never donated
+            {
+               System.out.println("Last donation date: never"); //last donation date
+               System.out.println("Eligible: yes."); //prints eligiblity
+               System.out.println("");//prints space
+            }
+         //end while
+    }
+    
+   }
+   
+/***************************************************************/
+/*Method: printDonations()                                     */
+/*Purpose: Prints the donor and all donations on file          */
+/*Parameters:                                                  */
+/*            : int    -The index of ID returned from searchID */
+/*      Return: void   -prints donors.                         */
+/***************************************************************/
+   public void printDonations(int index) {//printDonations start
+       if(index == -100){return;} //check for no user found
+       if(personList.get(index).getDonationList().isEmpty()){ //if no donations
+           System.out.println("No donation dates on file."); //tells user
+       }
+       for(Donation current: personList.get(index).getDonationList()){ //goes through donations
+           System.out.println(current.getDate()); //prints donations
        }
    }
-   public void print(LinkedList<Node> people)
-   {//start print
-         Node current = people.getFirst(); 
-         Person donorTest = (Person) current.getDatum(); 
-         while(current != null)
-         {//while
-            System.out.print((Person)current.getDatum()); 
-            if(current.getDateNode() != null)
-            {
-               Donation test = (Donation) current.getDateNode().getDatum(); 
-               System.out.println("Last donation date: " + test.getDate());
-               //}
-                
-               if(test.getDate() != LocalDate.MIN)
-               {//start if
-                                    if(donorTest.eligible(test))
-                  System.out.println("Eligible: yes.");
-                  else
-                  System.out.println("Eligible: no.");
-                  System.out.println("");
-               }
-               else 
-                  System.out.println("Never donated before.\n");
-            }// end if
-            else
-            {
-               System.out.println("Last donation date: never");
-               System.out.println("Eligible: yes.");
-               System.out.println("");
-            }
-            
-            current = current.getNext(); 
-         }//end while
-         
-      
-   }// end print
-
-
-/*************************************************************/
-/*Method: printDonations()                                    */
-/*Purpose: Prints the donor and all donations on file       */
-/*Parameters:                                                */
-/*            : Node                                         */
-/*      Return: void                                          */
-/*************************************************************/
-   public void printDonations(Node item)
-   {
-      Node current = item;
-      Person donorTest = (Person) current.getDatum(); 
-      //while(current != null)
-         //{//while
-            System.out.print(donorTest); 
-            if(current.getDateNode() != null)
-            {
-               Donation test = (Donation) current.getDateNode().getDatum(); 
-               System.out.println("Last donation dates: ");
-               while(current.getDateNode() != null)
-               {
-                  System.out.println(test.getDate()); 
-                  current = current.getDateNode(); 
-               }
-            }
-            else
-            System.out.println("No donation dates on file."); 
-         // }
-             
-
-   }
-
-
 
 /*************************************************************/
 /*Method: dateFormat                                         */
@@ -254,16 +217,16 @@ public class Database
  
    public LocalDate dateFormat(String date)
     {
-      String year = date.substring(0,4);
-      String month = date.substring(4,6);
-      String day = date.substring(6,8); 
+      String year = date.substring(0,4); //gets year from format
+      String month = date.substring(4,6); //gets month from format
+      String day = date.substring(6,8);  //gets day from format
       
-      int intYear = Integer.parseInt(year); 
-      int intMonth = Integer.parseInt(month);
-      int intDay = Integer.parseInt(day);
-      
-      LocalDate formatDate = LocalDate.of(intYear,intMonth,intDay);
-      return formatDate; 
+      int intYear = Integer.parseInt(year);  //converts year to integer
+      int intMonth = Integer.parseInt(month);//converts month to integer
+      int intDay = Integer.parseInt(day); //converts day to integer
+      //creates LocalDate with inputed data
+      LocalDate formatDate = LocalDate.of(intYear,intMonth,intDay); 
+      return formatDate; //returns new LocalDate object
     }
 
     

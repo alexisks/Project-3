@@ -136,7 +136,7 @@ Returns: void
       LocalDate today = LocalDate.now(); //Gets current date from eternal clock on machine
       String menu = "Current available commands:\n1 --> Print all donors\n2 --> Search for a donor"; //text for menu
       menu += "\n3 --> Search for a blood type \n4 --> Add new doner\n5 --> Add new Donation\n";
-      menu += "6 --> Find an Eligible donor\n9 --> Exit\nYour choice?";
+      menu += "6 --> Find an Eligible donor\n9 --> Exit\nYour choice? ";
         
       System.out.print("Welcome to the CS-102 Blood Donor Database Program. \nToday's date is: "); //text for menu
       System.out.println(today);//prints today's date
@@ -146,13 +146,11 @@ Returns: void
       Scanner choiceScan = new Scanner(System.in);//choice option for user
       int choice = 0;//choice variable
       do{//checks to make sure input is a valid integer
-         try
-         { 
+         try{ 
             choice = choiceScan.nextInt(); //checking the integer input from user
          } 
-         catch (InputMismatchException exc)
-         {
-            System.out.println("Only use integers: 1,2,3,4,5 or 9.");//error message
+         catch (InputMismatchException exc){
+            System.out.println("Only use integers: 1,2,3,4,5,6 or 9.");//error message
          }
          choiceScan.nextLine(); //clears the scanner
       }
@@ -162,7 +160,6 @@ Returns: void
           switch (choice) {
           //end 1
               case PRINT_ALL: //if input is 1 - to print
-                  
                   data.print(); //prints the linked list
                   break;
               case SEARCH_DONOR:
@@ -170,18 +167,18 @@ Returns: void
                   System.out.print("Donor ID number: "); //asking the user for donor ID to search
                   Scanner scan2 = new Scanner(System.in); //scanner for user input
                   String testID = scan2.next();//takes user input for ID
-                  Node matchID = data.searchID(testID); //creates node for the ID search in the database
-                  data.printDonations(matchID);//prints the donations
+                  int matchID = data.searchID(testID); //finds index of ID
+                  data.printDonations(matchID);//prints the donations using index
                   break;
               case SEARCH_BLOOD_TYPE:
                   //if input is 3, search for blood type
                   System.out.print("Bloodtype: " ); //asks user for bloodtype
                   Scanner scan3 = new Scanner(System.in); //scanner created for input
                   String testBlood = scan3.next(); //puts users input into scanner 
-                  Person[] matchBlood = data.searchBloodType(testBlood);//array created for the searched bloodtypes
-                  for(int i=0; matchBlood.length > i; i++) {//for loop to print
-                      System.out.println(matchBlood[i]); //prints array at position @ i
-                  }     break;
+                  data.searchBloodType(testBlood);//array created for the searched bloodtypes
+//                  for(int i=0; matchBlood.length > i; i++) {//for loop to print
+//                      System.out.println(matchBlood[i]); //prints array at position @ i
+                  break;
           //end 4
               case ADD_NEW_DONOR:
                   //if input is 4, add a new donor
@@ -236,7 +233,7 @@ Returns: void
                choice = choiceScan.nextInt();
             } 
             catch (InputMismatchException exc){
-               System.out.println("Only use integers: 1,2,3,4,5 or 9.");
+               System.out.println("Only use integers: 1,2,3,4,5,6 or 9.");
             }
             choiceScan.nextLine(); 
          }
