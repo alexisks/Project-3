@@ -63,8 +63,9 @@ public class Project3
             piecesDonation[index] = piecesDonation[index].replaceAll("/n", " ");  //removes any new lines
          }//creats donation object
          Donation donation1 = new Donation(piecesDonation[0], data.dateFormat(piecesDonation[1])); 
-         Node temp = new Node(); // new Node to add to the linked list
-         temp.setDatum(donation1); //sets the datum for the Node as the donation object
+         data.insertDonation(donation1);
+         //Node temp = new Node(); // new Node to add to the linked list
+         //temp.setDatum(donation1); //sets the datum for the Node as the donation object
 //         data.personList.addDonation(temp); //adds the donation Node
       }//while3 end 
       if(data.personList.size() ==  0) {//checks for blank files

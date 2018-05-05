@@ -8,12 +8,14 @@ package project3;
 /* Person Class: informatin about the people donating blood */
 /************************************************************/
 import java.time.LocalDate;
+import java.util.LinkedList;
 public class Person
 { //Person Class
    private String firstName; 
    private String lastName; 
    private String ID; 
    private String bloodType; 
+   private LinkedList<Donation> donationList = new LinkedList(); 
    
    public Person(String ID, String lastName, String firstName, String bloodType){ //Person 
       this.ID = ID;
@@ -26,6 +28,9 @@ public class Person
    public String getFirstName(){return firstName;}
    public String getBloodType(){return bloodType;}
    public String getPersonID(){return ID;}
+   public LinkedList<Donation> getDonationList(){return donationList;}
+   public void setDonationList(LinkedList<Donation> donationList){
+       this.donationList = donationList;}
    
    
 /****************************************************************/

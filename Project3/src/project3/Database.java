@@ -89,35 +89,78 @@ public class Database
 //      throw new NullPointerException(); 
       return null;
     }   
-   
+   /*************************************************************/
+/*Method: insertDonor()                                         */
+/*Purpose: adds a donor to the linked list in sorted order      */
+/*Parameters:                                                   */
+/*            : Person object - object to be added to the list  */
+/*      Return: void                                            */
+/*************************************************************/
    public void insertDonor(Person splice){
        if(personList.isEmpty()) //checks if empty
-            {personList.addFirst(splice);}
-       boolean last = true; 
-       int index = personList.indexOf(personList.getLast());
-       for(Person current: personList){
-           if(current.getPersonID().equals(splice.getPersonID())){
-               System.out.println("This user ID already exists.");
-               return; 
+            {personList.addFirst(splice); return; } //adds donor to the beginning of the list
+       int index = personList.indexOf(personList.getLast()); //defaults index to the end of list
+       for(Person current: personList){ //goes through the list until at end
+           if(current.getPersonID().equals(splice.getPersonID())){ //if the IDs are equal
+               System.out.println("This user ID already exists."); //tells user issue
+               return; //leaves method
            }
            else if(splice.getLastName().compareTo(current.getLastName()) < 0)
-           {
-               index = personList.indexOf(current);
-               personList.add(index, splice);
-               return; 
+           {                                          //if last name goes before
+               index = personList.indexOf(current); //gets the index
+               personList.add(index, splice); //adds at index
+               return; //leaves method
            }
            else if(splice.getLastName().compareTo(current.getLastName()) == 0)
-           {
+           { //last names are equal
                if(splice.getFirstName().compareTo(current.getFirstName()) < 0)
-               {
-                   index = personList.indexOf(current); 
-                   personList.add(index, splice);
-                   return; 
+               { //if this first name goes before the other
+                   index = personList.indexOf(current); //gets index
+                   personList.add(index, splice); //adds person at index
+                   return; //leaves method
                }
            }
        }
-       personList.addLast(splice); 
+       personList.addLast(splice); //defaults person at the end
    }
+   
+/*************************************************************/
+/*Method: insertDonation()                                      */
+/*Purpose: adds a donor to the linked list in sorted order      */
+/*Parameters:                                                   */
+/*            : Person object - object to be added to the list  */
+/*      Return: void                                            */
+/*************************************************************/
+   
+   public void insertDonation(Donation splice){
+       
+       for(Person current: personList){ //goes through the list until at end
+           if(splice.getID().compareTo(current.getPersonID()) == 0){
+               if(current.getDonationList().isEmpty()){
+                       current.getDonationList().addFirst(splice);
+                       System.out.print(current.getDonationList());
+                       return; 
+               }
+               
+               for(Donation currentDonation: current.getDonationList()){
+                   int index = current.getDonationList().indexOf(current.getDonationList().getLast()); 
+                   if(splice.getDate().compareTo(currentDonation.getDate()) < 0){
+                       index = current.getDonationList().indexOf(current.getDonationList()); //gets the index
+                       current.getDonationList().add(index, splice); //adds at index
+                       System.out.print(current.getDonationList());
+                       return; 
+                   }
+                   else{
+                       current.getDonationList().addLast(splice); 
+                       System.out.print(current.getDonationList());
+                       return; 
+                   }    
+               }//end for loop
+                   
+           }
+       }
+   }
+
 /*************************************************************/
 /*Method: print                                              */
 /*Purpose: print the results of a program                    */
