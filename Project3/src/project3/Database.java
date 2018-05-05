@@ -10,6 +10,7 @@ package project3;
 
 import java.time.LocalDate;
 import java.util.LinkedList;
+import static javafx.scene.input.KeyCode.O;
 public class Database
 { //Database class
    public LinkedList<Person> personList; 
@@ -35,34 +36,6 @@ public class Database
          System.out.println(current); //prints matches
       }
    }
-//     // while(current != null) 
-//     // {
-//         
-////         Person temp = (Person) current.getDatum(); //gets the current's datu
-////         String personBlood = temp.getBloodType(); //get bloodtyp from the datum
-////         if (personBlood.equals(bloodType)) 
-////         {count++; } //counts the amount of people who have the same bloodtype
-////         current = current.getNext(); //gets the next node
-//  //    }
-//      Person[] bloodMatches = new Person[count]; //array created for the matching bloodtypes
-//      count = 0; //counter back at 0
-//      current =  personList.getFirst(); //current is now back at the top of the list
-//      while(current != null) //while we're not at the end of the list
-//      {
-// //        Person temp = (Person) current.getDatum(); //get the datum from the current node
-// //        String personBlood = temp.getBloodType(); //gets the bloodtype from the datum
-////         if (personBlood.equals(bloodType)) //checks to see if the bloodtypes are equal
-//         {
-////            bloodMatches[count] = temp; //adds the match to the array
-//            count++; //adds to counter
-//         } 
-// //        current = current.getNext(); //goes to the next node in the list
-//      }
-//     
-//      return bloodMatches; //returns the array of donors who match bloodtypes
-//   }//search
-
-   
 
 /******************************************************************/
 /*Method: searchID                                                */
@@ -83,7 +56,7 @@ public class Database
             }
                  
         }
-        System.out.print("No user with this ID\n"); //lets user know no user found
+        
         return -100;  //for use in printDonation() to avoid errors
 
     }//end searchID   
@@ -97,9 +70,18 @@ public class Database
    public void insertDonor(Person splice){
        if(personList.isEmpty()) //checks if empty
             {personList.addFirst(splice); return; } //adds donor to the beginning of the list
+       for(Person current: personList){
+           int check;
+           check = searchID(splice.getPersonID());
+           if(check != -100){
+               System.out.println("Error: ID already being used. Try again with new number"); 
+               return; 
+           }
+               
+       }
        int index = personList.indexOf(personList.getLast()); //defaults index to the end of list
        for(Person current: personList){ //goes through the list until at end
-           if(current.getPersonID().equals(splice.getPersonID())){ //if the IDs are equal
+           if(current.getPersonID().compareTo(splice.getPersonID()) == 0){ //if the IDs are equal
                System.out.println("This user ID already exists."); //tells user issue
                return; //leaves method
            }
@@ -136,7 +118,6 @@ public class Database
            if(splice.getID().compareTo(current.getPersonID()) == 0){
                if(current.getDonationList().isEmpty()){
                        current.getDonationList().addFirst(splice);
-                       System.out.print(current.getDonationList());
                        return; 
                }
                
@@ -145,7 +126,6 @@ public class Database
                    if(splice.getDate().compareTo(currentDonation.getDate()) > 0){
                        index = current.getDonationList().indexOf(currentDonation); //gets the index
                        current.getDonationList().add(index, splice); //adds at index
-                       System.out.print(current.getDonationList());
                        return; 
                    }
                      
@@ -198,10 +178,15 @@ public class Database
 /*      Return: void   -prints donors.                         */
 /***************************************************************/
    public void printDonations(int index) {//printDonations start
-       if(index == -100){return;} //check for no user found
+       if(index == -100){
+           System.out.print("No user with this ID\n"); //lets user know no user found
+           return;
+       } //check for no user found
        if(personList.get(index).getDonationList().isEmpty()){ //if no donations
            System.out.println("No donation dates on file."); //tells user
+           return;
        }
+       System.out.println("Donation dates: ");
        for(Donation current: personList.get(index).getDonationList()){ //goes through donations
            System.out.println(current.getDate()); //prints donations
        }
@@ -228,6 +213,59 @@ public class Database
       LocalDate formatDate = LocalDate.of(intYear,intMonth,intDay); 
       return formatDate; //returns new LocalDate object
     }
-
-    
+/*******************************************************************/
+/*Method: compatibleDonors()                                       */
+/*Purpose: Prints the donors that are compatible with the searched */
+/*Parameters:                                                      */
+/*            : int    -The index of ID returned from searchID     */
+/*      Return: void   -prints donors.                             */
+/*******************************************************************/
+    public void compatibleDonors(String userType){
+        if(userType.equals("O-"))
+        {
+            searchBloodType("O-");
+        }
+        else if(userType.equals("O+")){
+            searchBloodType("O-");
+            searchBloodType("O+");
+        }
+        else if(userType.equals("A-")){
+            searchBloodType("O-");
+            searchBloodType("A-");
+        }
+        else if(userType.equals("A+")){
+            searchBloodType("O-");
+            searchBloodType("O+");
+            searchBloodType("A-");
+            searchBloodType("A+");
+        }
+        else if(userType.equals("B-")){
+            searchBloodType("O-");
+            searchBloodType("B-");
+        }
+        else if(userType.equals("B+")){
+            searchBloodType("O-");
+            searchBloodType("O+");
+            searchBloodType("B-");
+            searchBloodType("B+");
+        }
+        else if(userType.equals("AB-")){
+            searchBloodType("O-");
+            searchBloodType("A-");
+            searchBloodType("B-");
+            searchBloodType("AB-");
+        }
+        else if(userType.equals("AB+")){
+            searchBloodType("O-");
+            searchBloodType("O+");
+            searchBloodType("A-");
+            searchBloodType("A+");
+            searchBloodType("B-");
+            searchBloodType("B+");
+            searchBloodType("AB-");
+            searchBloodType("AB+");
+        }
+        
+    }//end compatibleDonors
+   
 } //end Database class

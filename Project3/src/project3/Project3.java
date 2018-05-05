@@ -175,9 +175,7 @@ Returns: void
                   System.out.print("Bloodtype: " ); //asks user for bloodtype
                   Scanner scan3 = new Scanner(System.in); //scanner created for input
                   String testBlood = scan3.next(); //puts users input into scanner 
-                  data.searchBloodType(testBlood);//array created for the searched bloodtypes
-//                  for(int i=0; matchBlood.length > i; i++) {//for loop to print
-//                      System.out.println(matchBlood[i]); //prints array at position @ i
+                  data.searchBloodType(testBlood);//prints the searched bloodtypes
                   break;
           //end 4
               case ADD_NEW_DONOR:
@@ -192,9 +190,7 @@ Returns: void
                   System.out.println("Enter ID number: "); //asks for ID number
                   String newID = scan4.next(); //creates an ID variable
                   Person person2 = new Person(newID, newLast, newFirst, newBlood); //uses variables to create person object
-                  Node temp = new Node();//creates Node to add to list
-                  temp.setDatum(person2); //sets the Datum
-     //             data.personList.add(temp);//adds Node to list
+                  data.insertDonor(person2);
                   break;
           //end 5
               case ADD_NEW_DONATION:
@@ -209,9 +205,7 @@ Returns: void
                   try {
                       test5 = data.dateFormat(newDate); //formats the local date object that the user gave
                       donation2 = new Donation(newID2, test5); //creates the donation object
-                    //  Node temp = new Node(); //Node to add to the list
-                    //  temp.setDatum(donation2); //sets the datum for Node
-                      //              data.personList.addDonation(temp); //adds the donation to the list
+                      data.insertDonation(donation2); //adds the donation to the list
                   }
                   catch (InputMismatchException exc){
                       System.out.println("Not a proper date."); //catches if user didn't give date in the proper format
@@ -219,7 +213,10 @@ Returns: void
           //end 6
               case ELIGIBLE_DONORS:
                   //6
-                  System.out.println("Choice 6");
+                  Scanner scan6 = new Scanner(System.in); //creates scanner for user input
+                  System.out.println("Enter bloodType: "); //asks for Donor's ID number
+                  String compatible = scan6.next();//creates date object
+                  data.compatibleDonors(compatible);
                   break;
               default:
                   System.out.print("Please choose from the current available commands. \n\n");
